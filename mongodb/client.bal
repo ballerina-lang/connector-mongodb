@@ -17,7 +17,7 @@
 import ballerina/jballerina.java;
 
 # Represents the MongoDB client.
-@display {label: "MongoDB Client", iconPath: "MongoDBLogo.png"}
+@display {label: "MongoDB", iconPath: "MongoDBLogo.png"}
 public client class Client {
 
     handle datasource;
@@ -63,9 +63,7 @@ public client class Client {
     # 
     # + databaseName - Name of the database
     # + return - A database handle on success or else a `mongodb:Error` if unable to reach the DB
-    @display {label: "Get Database"}
-    isolated function getDatabase(@display {label: "Database Name"} string databaseName) 
-                         returns @display {label: "Database"} handle|Error {
+    isolated function getDatabase(string databaseName) returns handle|Error {
         if (databaseName.trim().length() == 0) {
             return error ApplicationError("Database Name cannot be empty.");
         }
@@ -90,10 +88,7 @@ public client class Client {
     # + collectionName - Name of the collection
     # + databaseName - Name of the database 
     # + return - A collection object on success or else a `mongodb:Error` if unable to reach the DB
-    @display {label: "Get Collection"}
-    isolated function getCollection(@display {label: "Collection Name"} string collectionName, 
-                           @display {label: "Database Name"} string? databaseName = ()) 
-                           returns @display {label: "Collection"} handle|Error {
+    isolated function getCollection(string collectionName, string? databaseName = ()) returns handle|Error {
         if (collectionName.trim().length() == 0) {
             return error ApplicationError("Collection Name cannot be empty.");
         }
@@ -248,9 +243,11 @@ public client class Client {
         close(self.datasource);
     }
 
-    @display {label: "Get Current Database"}
-    isolated function getCurrentDatabase(@display {label: "Database Name"} string? databaseName) 
-                                returns @display {label: "Database"} handle|Error {
+    # Returns the `Current Database` handle.
+    # 
+    # + databaseName - Name of the database
+    # + return - A database handle on success or else a `mongodb:Error` if unable to get the DB
+    isolated function getCurrentDatabase(string? databaseName) returns handle|Error {
         if (databaseName is string) {
             handle database = check self.getDatabase(databaseName);
             return database;
